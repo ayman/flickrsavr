@@ -1,3 +1,11 @@
+## App specific stuff
+.savr
+nsids
+
+## Platform stuff
+*~
+.DS_Store
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
