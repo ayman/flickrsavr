@@ -128,24 +128,26 @@ class FlickrSavr(object):
         Arguments:
         - `self`:
         - `photo`:
-        """        
-        ## get image
+        """
+
+        ## Check if we have it already
         url = photo['url_o']
-        resp = urllib.urlopen(url)
-        image_data = resp.read()
         fname = os.path.join(self.get_date_path(photo),
                              photo['id'] + url[-4:])
-
         exists = not self.force and os.path.isfile(fname)
         if exists:
             self.print_status_count(True)
             return
-        self.print_status_count()
+
+        ## get image
+        resp = urllib.urlopen(url)
+        image_data = resp.read()
 
         # Open output file in binary mode, write, and close.
         f = open(fname, 'wb')
         f.write(image_data)
         f.close()
+        self.print_status_count()
 
         ## get more metadata
         favorites = []
