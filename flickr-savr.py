@@ -1,12 +1,12 @@
 import argparse
-import urllib
+import code
 import flickrapi
 import json
-import time
 import os
-import webbrowser
-import code
 import pyexiv2
+import time
+import urllib
+import webbrowser
 
 class FlickrSavr(object):
     """This is a digital preservation experiment.  It crawls your Flickr
@@ -33,23 +33,31 @@ class FlickrSavr(object):
                  secret, 
                  nsid,
                  basepath,
-                 verbose=False,
-                 sleep_time=0.200):
+                 verbose,
+                 force):
         """do
         
         Arguments:
         - `key`:
         - `secret`:
         - `ndsid`:
+        - `basepath`:
         - `verbose`:
-        - `sleep_time`:
+        - `force`:
         """        
         ## auth
         self.api_key = key
         self.api_secret = secret
         self.nsid = nsid
         self.basepath = os.path.join(basepath, "nsid", self.nsid)
+        self.verbose = not verbose
+        self.force = force
         
+        self.photo_count = 0
+        self.photo_page = 0
+        self.photo_total = 0
+        self.per_page = 500        
+
         self.flickr = flickrapi.FlickrAPI(self.api_key,
                                           self.api_secret,
                                           format='parsed-json')
@@ -86,23 +94,30 @@ class FlickrSavr(object):
                                                "description",
                                                "date_upload",
                                                "date_taken")
+
         photos = self.flickr.photos_search(user_id=self.nsid, 
-                                           per_page='2', 
+                                           per_page=self.per_page,
                                            extras=extras)
         photos = photos['photos']
+
+        self.photo_total = photos['perpage'] * photos['pages']
+        self.photo_page = 0
+
         for i in range(photos['perpage']):
+            self.photo_count = i
             photo = photos['photo'][i]
             self.get_photo(photo)
-            time.sleep(sleep_time)
-
+            
         ## this page counter is for the next page actually
         for page in range(photos['pages'])[1:]:
+            self.photo_page = page                    
             photos = self.flickr.photos_search(user_id=self.nsid, 
                                                page=str(page),
-                                               per_page='1', 
+                                               per_page=self.per_page, 
                                                extras=extras)
             photos = photos['photos']
             for i in range(photos['perpage']):
+                self.photo_count = i
                 photo = photos['photo'][i]
                 self.get_photo(photo)
         return
@@ -120,6 +135,13 @@ class FlickrSavr(object):
         image_data = resp.read()
         fname = os.path.join(self.get_date_path(photo),
                              photo['id'] + url[-4:])
+
+        exists = not self.force and os.path.isfile(fname)
+        if exists:
+            self.print_status_count(True)
+            return
+        self.print_status_count()
+
         # Open output file in binary mode, write, and close.
         f = open(fname, 'wb')
         f.write(image_data)
@@ -191,8 +213,25 @@ class FlickrSavr(object):
         path = os.path.join(self.basepath, parsed[0], parsed[1], date)
         if not os.path.exists(path):
             os.makedirs(path)
-        return path    
-        
+        return path
+
+    def print_status(self, s):
+        if self.verbose:
+            print s
+        return
+
+    def print_status_count(self, exists=False):
+        condition = ""
+        if exists:
+            condition = "(file exists)"
+        if self.verbose:
+            self.print_status("%s / %s %s" %
+                              (1+ self.photo_count + (self.per_page *
+                                                      self.photo_page),
+                               self.photo_total,
+                               condition))
+        return
+
 def main():
     desc = 'Download a Flickr Account.'
     parser = argparse.ArgumentParser(prog='FlickrSavr',
@@ -206,12 +245,17 @@ def main():
                         nargs=1,
                         default='',
                         help='Basedirectory to use for storing files.')
-    parser.add_argument("-v",
-                        "--verbose",
+    parser.add_argument("-f",
+                        "--force",
+                        help="Force download if file already exists. ",
+                        action="store_true")
+    parser.add_argument("-q",
+                        "--quiet",
                         help="increase output verbosity",
                         action="store_true")
     args = parser.parse_args()
-    FlickrSavr(args.key, args.secret, args.nsid, args.basepath[0], args.verbose)
+    FlickrSavr(args.key, args.secret, args.nsid, args.basepath[0],
+               args.quiet, args.force)
 
 if __name__ == "__main__":
     main()
