@@ -70,8 +70,9 @@ class FlickrSavr(object):
           self.flickr.get_access_token(verifier)
 
         ## dir
-        if not os.path.exists(self.nsid):
-            os.makedirs(self.nsid)
+        path = os.path.join("nsid", self.nsid)
+        if not os.path.exists(path):
+            os.makedirs(path)
 
         ## search: this has a 'pages' field with how many photos left
         ## accounting per page..max is 500
