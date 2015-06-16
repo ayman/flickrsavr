@@ -5,6 +5,7 @@ import json
 import time
 import os
 import webbrowser
+import code
 
 class FlickrSavr(object):
     """This is a digital preservation experiment.  It crawls your Flickr
@@ -98,10 +99,10 @@ class FlickrSavr(object):
                                                per_page='1', 
                                                extras=extras)
             photos = photos['photos']
-            # import code
-            # vars = globals()
+            # vars = globals().update(locals())
             # vars.update(locals())
             # code.InteractiveConsole(vars).interact()
+            code.InteractiveConsole(globals().update(locals())).interact()
             for i in range(photos['perpage']):
                 photo = photos['photo'][i]
                 self.get_photo(photo)
@@ -116,7 +117,6 @@ class FlickrSavr(object):
         - `photo`:
         """        
         print photo['id']
-        return
         ## get image
         url = photo['url_o']
         resp = urllib.urlopen(url)
@@ -129,8 +129,7 @@ class FlickrSavr(object):
 
         ## get more metadata
         favorites = []
-        f = self.flickr.photos_getFavorites(photo_id=photo['id'])
-        favs = json.loads(f[14:-1])
+        favs = self.flickr.photos_getFavorites(photo_id=photo['id'])
         for person in favs['photo']['person']:
             s = "Flickr.favorites:%s:%s:%s" % (person['username'],
                                                person['nsid'], 
@@ -138,8 +137,7 @@ class FlickrSavr(object):
             favorites.append(s)
 
         comments = []
-        c = self.flickr.photos_comments_getList(photo_id=photo['id'])
-        comms = json.loads(c[14:-1])
+        comms = self.flickr.photos_comments_getList(photo_id=photo['id'])
         try:
             for comment in comms['comments']['comment']:
                 c = "Flickr.comments:%s:%s:%s:%s" % (comment['author'],
@@ -150,8 +148,7 @@ class FlickrSavr(object):
         except:
             pass
         pools = []
-        p = self.flickr.photos_getAllContexts(photo_id=photo['id']);
-        pool = json.loads(c[14:-1])
+        pool = self.flickr.photos_getAllContexts(photo_id=photo['id']);
         try: 
             for sets in pool['set']:
                 c = "Flickr.sets:%s:$s" % (sets['title'],
