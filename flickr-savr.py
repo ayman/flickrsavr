@@ -1,9 +1,10 @@
+import argparse
 import urllib
 import flickrapi
-import pyexiv2
 import json
 import time
 import os
+import webbrowser
 
 class FlickrSavr(object):
     """This is a digital preservation experiment.  It crawls your Flickr
@@ -26,7 +27,7 @@ class FlickrSavr(object):
     """
 
     def __init__(self, 
-                 api_key, 
+                 key, 
                  secret, 
                  nsid, 
                  verbose=False, 
@@ -34,24 +35,42 @@ class FlickrSavr(object):
         """do
         
         Arguments:
-        - `api_key`:
+        - `key`:
         - `secret`:
         - `ndsid`:
         - `verbose`:
         - `sleep_time`:
         """        
         ## auth
-        self.api_key = api_key
-        self.secret = secret
+        self.api_key = key
+        self.api_secret = secret
         self.nsid = nsid
-        self.flickr = flickrapi.FlickrAPI(api_key, secret, format='json')
+
+        self.flickr = flickrapi.FlickrAPI(self.api_key,
+                                          self.api_secret,
+                                          format='parsed-json')
+
+        # Only do this if we don't have a valid token already
+        if not self.flickr.token_valid(perms=unicode('write')):
+
+          # Get a request token
+          self.flickr.get_request_token(oauth_callback='oob')
+
+          # Open a browser at the authentication URL. Do this however
+          # you want, as long as the user visits that URL.
+          authorize_url = self.flickr.auth_url(perms=unicode('write'))
+          webbrowser.open_new_tab(authorize_url)
+
+          # Get the verifier code from the user. Do this however you
+          # want, as long as the user gives the application the code.
+          verifier = unicode(raw_input('Verifier code: '))
+
+          # Trade the request token for an access token
+          self.flickr.get_access_token(verifier)
+
         ## dir
         if not os.path.exists(self.nsid):
             os.makedirs(self.nsid)
-        (token, frob) = self.flickr.get_token_part_one(perms='write')
-        if not token: 
-            raw_input("Press ENTER after you authorized this program")
-        self.flickr.get_token_part_two((token, frob))
 
         ## search: this has a 'pages' field with how many photos left
         ## accounting per page..max is 500
@@ -64,22 +83,27 @@ class FlickrSavr(object):
                                                "date_upload",
                                                "date_taken")
         photos = self.flickr.photos_search(user_id=self.nsid, 
-                                           per_page='1', 
+                                           per_page='2', 
                                            extras=extras)
-        jphotos = json.loads(photos[14:-1])
-        for i in range(jphtos['perpage']):
-            photo = jphotos['photos']['photo'][i]
+        photos = photos['photos']
+        for i in range(photos['perpage']):
+            photo = photos['photo'][i]
             self.get_photo(photo)
             time.sleep(sleep_time)
+
         ## this page counter is for the next page actually
-        for page in range(jphotos['pages'])[1:]:
+        for page in range(photos['pages'])[1:]:
             photos = self.flickr.photos_search(user_id=self.nsid, 
                                                page=str(page),
                                                per_page='1', 
                                                extras=extras)
-            jphotos = json.loads(photos[14:-1])
-            for i in range(jphtos['perpage']):
-                photo = jphotos['photos']['photo'][i]
+            photos = photos['photos']
+            # import code
+            # vars = globals()
+            # vars.update(locals())
+            # code.InteractiveConsole(vars).interact()
+            for i in range(photos['perpage']):
+                photo = photos['photo'][i]
                 self.get_photo(photo)
                 time.sleep(sleep_time)
         return
@@ -91,7 +115,8 @@ class FlickrSavr(object):
         - `self`:
         - `photo`:
         """        
-                
+        print photo['id']
+        return
         ## get image
         url = photo['url_o']
         resp = urllib.urlopen(url)
@@ -165,30 +190,19 @@ class FlickrSavr(object):
         metadata.write()
 
 def main():
-    import getopt
-    import sys
-    options = getopt.getopt(sys.argv[1:],
-                            'h, v',
-                            ['help', 'verbose'])
-    raw = False
-    if len(options[-1]) is 0:
-        print "I guess I need your NSID"
-        sys.exit(0)
-    verbose = False
-    for option, value in options[0]:
-        if option in ('-h', '--help'):
-            if (len(options[-1]) is 0):
-                print "Which nsid do you want?"
-            else:
-                print __doc__
-            sys.exit(0)
-        elif option in ('-v', '--verbose'):
-            verbose = True
-    # term = options[-1][0]
-    api_key = ""
-    secret = ""
-    nsid = ""
-    FlickrSavr(api_key, secret, nsid, verbose)
+    desc = 'Download a Flickr Account.'
+    parser = argparse.ArgumentParser(prog='FlickrSavr',
+                                     usage='%(prog)s key secret nsid',
+                                     description=desc)
+    parser.add_argument('key', help='Flickr API Key')
+    parser.add_argument('secret', help='Flickr API Secret')
+    parser.add_argument('nsid', help='Flickr Account NSID')
+    parser.add_argument("-v",
+                        "--verbose",
+                        help="increase output verbosity",
+                        action="store_true")
+    args = parser.parse_args()
+    FlickrSavr(args.key, args.secret, args.nsid, args.verbose)
 
 if __name__ == "__main__":
     main()
