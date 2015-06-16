@@ -6,6 +6,7 @@ import time
 import os
 import webbrowser
 import code
+import pyexiv2
 
 class FlickrSavr(object):
     """This is a digital preservation experiment.  It crawls your Flickr
@@ -30,8 +31,9 @@ class FlickrSavr(object):
     def __init__(self, 
                  key, 
                  secret, 
-                 nsid, 
-                 verbose=False, 
+                 nsid,
+                 basepath,
+                 verbose=False,
                  sleep_time=0.200):
         """do
         
@@ -46,7 +48,8 @@ class FlickrSavr(object):
         self.api_key = key
         self.api_secret = secret
         self.nsid = nsid
-
+        self.basepath = os.path.join(basepath, "nsid", self.nsid)
+        
         self.flickr = flickrapi.FlickrAPI(self.api_key,
                                           self.api_secret,
                                           format='parsed-json')
@@ -70,9 +73,8 @@ class FlickrSavr(object):
           self.flickr.get_access_token(verifier)
 
         ## dir
-        path = os.path.join("nsid", self.nsid)
-        if not os.path.exists(path):
-            os.makedirs(path)
+        if not os.path.exists(self.basepath):
+            os.makedirs(self.basepath)
 
         ## search: this has a 'pages' field with how many photos left
         ## accounting per page..max is 500
@@ -100,14 +102,9 @@ class FlickrSavr(object):
                                                per_page='1', 
                                                extras=extras)
             photos = photos['photos']
-            # vars = globals().update(locals())
-            # vars.update(locals())
-            # code.InteractiveConsole(vars).interact()
-            code.InteractiveConsole(globals().update(locals())).interact()
             for i in range(photos['perpage']):
                 photo = photos['photo'][i]
                 self.get_photo(photo)
-                time.sleep(sleep_time)
         return
 
     def get_photo(self, photo):
@@ -117,12 +114,12 @@ class FlickrSavr(object):
         - `self`:
         - `photo`:
         """        
-        print photo['id']
         ## get image
         url = photo['url_o']
         resp = urllib.urlopen(url)
         image_data = resp.read()
-        fname = os.path.join(self.nsid, photo['id'] + url[-4:])
+        fname = os.path.join(self.get_date_path(photo),
+                             photo['id'] + url[-4:])
         # Open output file in binary mode, write, and close.
         f = open(fname, 'wb')
         f.write(image_data)
@@ -187,20 +184,34 @@ class FlickrSavr(object):
         metadata.iptc_charset = 'utf-8'
         metadata.write()
 
+    def get_date_path(self, photo):
+        datetaken = photo['datetaken']
+        date = datetaken.split(' ')[0]
+        parsed = date.split('-')
+        path = os.path.join(self.basepath, parsed[0], parsed[1], date)
+        if not os.path.exists(path):
+            os.makedirs(path)
+        return path    
+        
 def main():
     desc = 'Download a Flickr Account.'
     parser = argparse.ArgumentParser(prog='FlickrSavr',
                                      usage='%(prog)s key secret nsid',
-                                     description=desc)
+                                     description=desc,
+                                     epilog='thats how its done.')
     parser.add_argument('key', help='Flickr API Key')
     parser.add_argument('secret', help='Flickr API Secret')
     parser.add_argument('nsid', help='Flickr Account NSID')
+    parser.add_argument('-b', '--basepath',
+                        nargs=1,
+                        default='',
+                        help='Basedirectory to use for storing files.')
     parser.add_argument("-v",
                         "--verbose",
                         help="increase output verbosity",
                         action="store_true")
     args = parser.parse_args()
-    FlickrSavr(args.key, args.secret, args.nsid, args.verbose)
+    FlickrSavr(args.key, args.secret, args.nsid, args.basepath[0], args.verbose)
 
 if __name__ == "__main__":
     main()
