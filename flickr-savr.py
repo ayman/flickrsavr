@@ -170,6 +170,8 @@ class FlickrSavr(object):
         except:
             pass
         pools = []
+        ## this call failed...maybe try to wrap all the bad ids
+        ## somewhere for later handling
         pool = self.flickr.photos_getAllContexts(photo_id=photo['id']);
         try: 
             for sets in pool['set']:
