@@ -4,7 +4,7 @@ import flickrapi
 # import json
 import os
 import pyexiv2
-# import time
+import time
 import urllib
 import webbrowser
 
@@ -145,9 +145,8 @@ class FlickrSavr(object):
         image_data = resp.read()
 
         # Open output file in binary mode, write, and close.
-        f = open(fname, 'wb')
-        f.write(image_data)
-        f.close()
+        with open(fname, 'wb') as f:
+            f.write(image_data)
         self.print_status_count()
 
         # get more metadata
@@ -170,8 +169,8 @@ class FlickrSavr(object):
         except:
             pass
         pools = []
-        # this call failed...maybe try to wrap all the bad ids
-        # somewhere for later handling
+        # TODO: this call failed...maybe try to wrap all the bad ids somewhere
+        # for later handling
         pool = self.flickr.photos_getAllContexts(photo_id=photo['id'])
         try:
             for sets in pool['set']:
@@ -208,6 +207,7 @@ class FlickrSavr(object):
         metadata[key] = vals
         metadata.iptc_charset = 'utf-8'
         metadata.write()
+        time.sleep(0.1)
 
     def get_date_path(self, photo):
         datetaken = photo['datetaken']
