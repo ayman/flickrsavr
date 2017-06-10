@@ -113,7 +113,7 @@ class FlickrSavr(object):
         for page in range(photos['pages'])[1:]:
             self.photo_page = page
             photos = self.flickr.photos_search(user_id=self.nsid,
-                                               page=str(page),
+                                               page=str(self.photo_page + 1),
                                                per_page=self.per_page,
                                                extras=extras)
             photos = photos['photos']
@@ -158,7 +158,6 @@ class FlickrSavr(object):
                                                person['nsid'],
                                                person['favedate'])
             favorites.append(s)
-
         comments = []
         comms = self.flickr.photos_comments_getList(photo_id=photo['id'])
         try:
