@@ -248,7 +248,7 @@ def main():
     parser.add_argument('nsid', help='Flickr Account NSID')
     parser.add_argument('-b', '--basepath',
                         nargs=1,
-                        default='',
+                        default='./',
                         help='Basedirectory to use for storing files.')
     parser.add_argument("-f",
                         "--force",
