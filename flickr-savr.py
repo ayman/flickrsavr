@@ -117,7 +117,8 @@ class FlickrSavr(object):
                                                per_page=self.per_page,
                                                extras=extras)
             photos = photos['photos']
-            for i in range(photos['perpage']):
+            print photos['perpage']
+            for i in range(len(photos['photo'])):
                 self.photo_count = i
                 photo = photos['photo'][i]
                 self.get_photo(photo)
