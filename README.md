@@ -16,13 +16,13 @@ experiment...it's not complete and I make no promises.
 ## Dependencies
 
 * Python 2.7
-* [https://pypi.python.org/pypi/flickrapi](https://pypi.python.org/pypi/flickrapi)
-* [http://tilloy.net/dev/pyexiv2/](http://tilloy.net/dev/pyexiv2/)
+* [https://pypi.python.org/pypi/flickrapi](https://pypi.python.org/pypi/flickrapi) Can be pip installed.
+* [http://tilloy.net/dev/pyexiv2/](http://tilloy.net/dev/pyexiv2/) Can be installed via homebrew.
 
 ## Limits
 
 3600 queries per hour is all thats allowed. Thats 1 query per
-second. Each photo takes 3 queries to get it's metadata...so
+second. Each photo takes 3 queries to get its metadata...so
 that's a cap of 1200 photos per hour.  It takes, by rough
 estimate, 3 seconds to query 3 times, download, and write to disk.
 So by most estimates you won't overrun the limit...that said,
