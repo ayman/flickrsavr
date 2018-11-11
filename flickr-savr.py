@@ -1,7 +1,5 @@
 import argparse
 import flickrapi
-# import code
-# import json
 import os
 import pyexiv2
 import time
@@ -113,7 +111,6 @@ class FlickrSavr(object):
                                                per_page=self.per_page,
                                                extras=extras)
             photos = photos['photos']
-            print photos['perpage']
             for i in range(len(photos['photo'])):
                 self.photo_count = i
                 photo = photos['photo'][i]
