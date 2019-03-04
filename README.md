@@ -23,7 +23,7 @@ experiment...it's not complete and I make no promises.
 
 I think you need all this stuff with [*homebrew*](https://brew.sh):
 
-````
+```
 brew install boost boost-python3 gexiv2 pygobject pygobject3
 ```
 
