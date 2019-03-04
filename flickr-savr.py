@@ -3,7 +3,9 @@ import flickrapi
 import os
 import pyexiv2
 import time
-import urllib
+import urllib.request
+import urllib.parse
+import urllib.error
 import webbrowser
 
 
@@ -62,16 +64,16 @@ class FlickrSavr(object):
                                           format='parsed-json')
 
         # Only do this if we don't have a valid token already
-        if not self.flickr.token_valid(perms=unicode('write')):
+        if not self.flickr.token_valid(perms=str('write')):
             # Get a request token
             self.flickr.get_request_token(oauth_callback='oob')
             # Open a browser at the authentication URL. Do this however
             # you want, as long as the user visits that URL.
-            authorize_url = self.flickr.auth_url(perms=unicode('write'))
+            authorize_url = self.flickr.auth_url(perms=str('write'))
             webbrowser.open_new_tab(authorize_url)
             # Get the verifier code from the user. Do this however you
             # want, as long as the user gives the application the code.
-            verifier = unicode(raw_input('Verifier code: '))
+            verifier = str(input('Verifier code: '))
             # Trade the request token for an access token
             self.flickr.get_access_token(verifier)
 
@@ -135,7 +137,7 @@ class FlickrSavr(object):
             return
 
         # get image
-        resp = urllib.urlopen(url)
+        resp = urllib.request.urlopen(url)
         image_data = resp.read()
 
         # Open output file in binary mode, write, and close.
@@ -214,7 +216,7 @@ class FlickrSavr(object):
 
     def print_status(self, s):
         if self.verbose:
-            print s
+            print(s)
         return
 
     def print_status_count(self, exists=False):

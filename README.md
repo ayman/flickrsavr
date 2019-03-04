@@ -15,9 +15,20 @@ experiment...it's not complete and I make no promises.
 
 ## Dependencies
 
-* Python 2.7
+* Python 3
+* Macos: brew install boost boost-python3 gexiv2 pygobject pygobject3
 * [https://pypi.python.org/pypi/flickrapi](https://pypi.python.org/pypi/flickrapi) Can be pip installed.
-* [http://tilloy.net/dev/pyexiv2/](http://tilloy.net/dev/pyexiv2/) Can be installed via homebrew.
+* [py3exiv2](https://github.com/mcmclx/py3exiv2/) manually installed with pip.
+
+## MacOS
+
+Install dependencies then, get py3exiv2: 
+```
+wget https://github.com/mcmclx/py3exiv2/archive/master.zip
+```
+Apply `py3exiv2-mac.patch` to `setup.py`.
+
+You can pip3 install it from there.
 
 ## Limits
 
