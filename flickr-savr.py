@@ -1,15 +1,13 @@
 import argparse
 import flickrapi
-import os
-import time
-import urllib.request
-import urllib.parse
-import urllib.error
-import webbrowser
-import tempfile
-
 import gi
-
+import os
+import tempfile
+import time
+import urllib.error
+import urllib.parse
+import urllib.request
+import webbrowser
 gi.require_version('GExiv2', '0.10')
 from gi.repository import GExiv2
 
@@ -250,7 +248,7 @@ class FlickrSavr(object):
 
 
 def main():
-    desc = 'Download a Flickr Account.'
+    desc = 'Download a Flickr Account. See https://github.com/ayman/flickrsavr/ for setup help.'
     parser = argparse.ArgumentParser(prog='FlickrSavr',
                                      usage='%(prog)s key secret nsid',
                                      description=desc,
