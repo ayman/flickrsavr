@@ -1,12 +1,17 @@
 import argparse
 import flickrapi
 import os
-import pyexiv2
 import time
 import urllib.request
 import urllib.parse
 import urllib.error
 import webbrowser
+import tempfile
+
+import gi
+
+gi.require_version('GExiv2', '0.10')
+from gi.repository import GExiv2
 
 
 class FlickrSavr(object):
@@ -28,7 +33,6 @@ class FlickrSavr(object):
     200 ms between photos just to be nice.
 
     """
-
     def __init__(self,
                  key,
                  secret,
@@ -116,8 +120,13 @@ class FlickrSavr(object):
             for i in range(len(photos['photo'])):
                 self.photo_count = i
                 photo = photos['photo'][i]
-                self.get_photo(photo)
-        return
+                try:
+                    self.get_photo(photo)
+                except KeyboardInterrupt as e:
+                    print(photo)
+                    exit()
+                finally:
+                    time.sleep(0.5)
 
     def get_photo(self, photo):
         """Get the data around a photo.
@@ -135,75 +144,83 @@ class FlickrSavr(object):
         if exists:
             self.print_status_count(True)
             return
-
+        
+        _, fname_temp = tempfile.mkstemp()
+        
         # get image
         resp = urllib.request.urlopen(url)
         image_data = resp.read()
 
         # Open output file in binary mode, write, and close.
-        with open(fname, 'wb') as f:
+        with open(fname_temp, 'wb') as f:
             f.write(image_data)
         self.print_status_count()
 
         # get more metadata
         favorites = []
         favs = self.flickr.photos_getFavorites(photo_id=photo['id'])
+        time.sleep(0.15)
         for person in favs['photo']['person']:
-            s = "Flickr.favorites:%s:%s:%s" % (person['username'],
-                                               person['nsid'],
-                                               person['favedate'])
-            favorites.append(s)
+            favorites.append(person['username'])
+            favorites.append(person['nsid'])
+            favorites.append(person['favedate'])
         comments = []
         comms = self.flickr.photos_comments_getList(photo_id=photo['id'])
+        time.sleep(0.15)
         try:
             for comment in comms['comments']['comment']:
-                c = "Flickr.comments:%s:%s:%s:%s" % (comment['author'],
-                                                     comment['authorname'],
-                                                     comment['datecreate'],
-                                                     comment['_content'])
-                comments.append(c)
+                comments.append(comment['author'])
+                comments.append(comment['authorname'])
+                comments.append(comment['datecreate'])
+                comments.append(comment['_content'])
         except:
             pass
         pools = []
         # TODO: this call failed...maybe try to wrap all the bad ids somewhere
         # for later handling
         pool = self.flickr.photos_getAllContexts(photo_id=photo['id'])
+        sets = []
         try:
-            for sets in pool['set']:
-                c = "Flickr.sets:%s:$s" % (sets['title'],
-                                           sets['id'])
-                pools.append(c)
+            for set in pool['set']:
+                sets.append(sets['title'])
+                sets.append(sets['id'])
         except:
             pass
-        # write exif
-        metadata = pyexiv2.ImageMetadata(fname)
-        metadata.read()
-        key = 'Iptc.Application2.Keywords'
-        vals = ["Flickr.id:%s" % photo['id'],
-                "Flickr.owner:%s" % self.nsid,
-                "Flickr.title:%s" % photo['title'],
-                "Flickr.description:%s" % photo['description']['_content'],
-                "Flickr.isfamily:%d" % photo['isfamily'],
-                "Flickr.isfriend:%d" % photo['isfriend'],
-                "Flickr.views:%s" % photo['views'],
-                "Flickr.date_upload:%s" % photo['dateupload'],
-                "Flickr.date_taken:%s" % photo['datetaken']]
+        metadata = GExiv2.Metadata()
+        metadata.open_path(fname_temp)
+        metadata.register_xmp_namespace("https://shamur.ai/bin/flickrsavr/ns", "flickrsavr")
+        metadata.set_tag_long("Xmp.flickrsavr.id", int(photo['id']))
+        metadata.set_tag_string("Xmp.flickrsavr.owner", self.nsid)
+        metadata.set_tag_string("Xmp.flickrsavr.title", photo['title'])
+        metadata.set_tag_long("Xmp.flickrsavr.ispublic", photo['ispublic'])
+        metadata.set_tag_long("Xmp.flickrsavr.isfriend", photo['isfriend'])
+        metadata.set_tag_long("Xmp.flickrsavr.isfamily", photo['isfamily'])
+        metadata.set_tag_string("Xmp.flickrsavr.description", photo['description']['_content'])        
+        metadata.set_tag_string("Xmp.flickrsavr.dateupload", photo['dateupload'])
+        metadata.set_tag_string("Xmp.flickrsavr.datetaken", photo['datetaken'])
+        metadata.set_tag_long("Xmp.flickrsavr.datetakengranularity", int(photo['datetakengranularity']))
+        metadata.set_tag_long("Xmp.flickrsavr.datetakenunknown", int(photo['datetakenunknown']))
+        metadata.set_tag_long("Xmp.flickrsavr.views", int(photo['views']))
+        metadata.set_tag_string("Xmp.flickrsavr.machine_tags", photo['machine_tags'])
+        metadata.set_tag_string("Xmp.flickrsavr.url_o", photo['url_o'])
+        metadata.set_tag_long("Xmp.flickrsavr.height_o", photo['height_o'])
+        metadata.set_tag_long("Xmp.flickrsavr.width_o", photo['width_o'])
         if ('latitude' in photo and 'longitude' in photo):
-            coords = ["Flickr.latitude:%s" % photo['latitude'],
-                      "Flickr.longitude:%s" % photo['longitude']]
-            vals += coords
+            metadata.set_tag_string("Xmp.flickrsavr.latitude", str(photo['latitude']))
+            metadata.set_tag_string("Xmp.flickrsavr.longitude", str(photo['longitude']))
         if ('accuracy' in photo):
-            accuracy = ["Flickr.accuracy:%s" % photo['accuracy']]
-            vals += accuracy
+            metadata.set_tag_long("Xmp.flickrsavr.accuracy", int(photo['accuracy']))
         if ('tags' in photo):
-            tags = ["Flickr.tags:%s" % photo['tags']]
-            vals += tags
-        # join all into vals
-        vals.extend(favorites)
-        metadata[key] = vals
-        metadata.iptc_charset = 'utf-8'
-        metadata.write()
-        time.sleep(0.1)
+            metadata.set_tag_string("Xmp.flickrsavr.tags", photo['tags'])
+        metadata.set_tag_multiple("Xmp.flickrsavr.favorites", favorites)
+        metadata.set_tag_multiple("Xmp.flickrsavr.comments", comments)
+        metadata.set_tag_multiple("Xmp.flickrsavr.sets", sets)
+        metadata.save_file(fname_temp)
+        try:
+            os.replace(fname_temp, fname)
+        except KeyboardInterrupt as e:
+            print("Aborting, restart to resume")
+
 
     def get_date_path(self, photo):
         datetaken = photo['datetaken']

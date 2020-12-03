@@ -1,6 +1,7 @@
 # Flickr Savr
 
-Save photos from Flickr to your disk with metadata.
+Save photos from Flickr to your disk with metadata embedded in the
+photos.
 
 ## About
 
@@ -8,34 +9,56 @@ This is a digital preservation experiment.  It crawls your Flickr
 Photos and saves them to disk with all the Flickr metadata stored in
 the EXIF.  The idea here is, most preservation methods keep the photos
 and then keep a separate database (in whatever format) elsewhere.  I
-thought I could have all the date stored in the photo so that it is
+thought I could have all the data stored in the photo so that it is
 not only coupled with the primary data but could be reconstructed from
 arbitrary collections of photos across people.  It's just an
 experiment...it's not complete and I make no promises.
 
+## Version 2 
+
+Version 2 makes an explicit XMP namespace (with RDF XML) and stores
+all the metadata is neatly stored there. Version 1 just added well
+formatted strings to the ICTP keyword array. Not only was this messier
+and unorganized like that drawer in your kitchen, it had a consequence
+on general photo search tools.  As a result, **if you used Version 1**
+leave that old photos dir alone and make a new one for Version 2.
+They are incompatible.
+
+## Running this
+
+You'll need to make your own [Flickr API Key and
+Seceret](https://www.flickr.com/services/apps/by/ayman).  You'll also
+need to look up your NSID.  You can find it by visiting a [URL in the
+Flickr App
+Garden](https://www.flickr.com/services/api/explore/flickr.profile.getProfile)
+listed as *Your user ID*.
+
+You can run the script as:
+```
+python flickr-savr.py -b PHOTODIR YOURAPIKEY YOURAPISECRET YOURNSID
+```
+
 ## Dependencies
 
 * Python 3
-* [https://pypi.python.org/pypi/flickrapi](https://pypi.python.org/pypi/flickrapi) Can be pip installed.
-* [py3exiv2](https://github.com/mcmclx/py3exiv2/) manually installed with pip.
+* [https://pypi.python.org/pypi/flickrapi](https://pypi.python.org/pypi/flickrapi)
+  Can be pip installed.
 
 ## MacOS
 
 I think you need all this stuff with [*homebrew*](https://brew.sh):
 
 ```
-brew install boost boost-python3 gexiv2 pygobject pygobject3
+brew install boost-python3 gexiv2 pygobject3
 ```
 
-Install dependencies then, get py3exiv2: 
+And if you are using a VENV you might need to point the PYTHONPATH:
 
 ```
-wget https://github.com/mcmclx/py3exiv2/archive/master.zip
+export PYTHONPATH=/usr/local/lib/python3.9/site-packages
 ```
 
-Apply `py3exiv2-mac.patch` to `setup.py`.
-
-You can cd into it and `python3 setup.py install` it from there.
+That's mine, yours might be different.
 
 ## Limits
 

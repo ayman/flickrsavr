@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE rdf:RDF [
+  <!ENTITY xsd "http://www.w3.org/2001/XMLSchema#">
+]>
+<rdf:RDF
+  xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+  xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+  xml:base="https://shamur.ai/bin/flickrsavr/ns#">
+
+  <rdf:Property rdf:about="https://shamur.ai/bin/flickrsavr/ns#id">
+    <rdfs:label xml:lang="en-US">Photo ID</rdfs:label>
+    <rdfs:comment xml:lang="en-US">Flickr Photo ID of the photo</rdfs:comment>
+    <rdfs:isDefinedBy rdf:resource="https://shamur.ai/bin/flickrsavr/ns"/>
+    <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
+  </rdf:Property>
+
+  <rdf:Property rdf:about="https://shamur.ai/bin/flickrsavr/ns#nsid">
+    <rdfs:label xml:lang="en-US">Flickr NSID</rdfs:label>
+    <rdfs:comment xml:lang="en-US">Flickr NSID of the photo owner</rdfs:comment>
+    <rdfs:isDefinedBy rdf:resource="https://shamur.ai/bin/flickrsavr/ns"/>
+    <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
+  </rdf:Property>
+
+  <rdf:Property rdf:about="https://shamur.ai/bin/flickrsavr/ns#title">
+    <rdfs:label xml:lang="en-US">Flickr title</rdfs:label>
+    <rdfs:comment xml:lang="en-US">Flickr title of the photo</rdfs:comment>
+    <rdfs:isDefinedBy rdf:resource="https://shamur.ai/bin/flickrsavr/ns"/>
+    <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
+  </rdf:Property>
+
+  <rdf:Property rdf:about="https://shamur.ai/bin/flickrsavr/ns#ispublic">
+    <rdfs:label xml:lang="en-US">Flickr ispublic flag</rdfs:label>
+    <rdfs:comment xml:lang="en-US">Boolean if the Flickr photo is public</rdfs:comment>
+    <rdfs:isDefinedBy rdf:resource="https://shamur.ai/bin/flickrsavr/ns"/>
+    <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
+  </rdf:Property>
+
+  <rdf:Property rdf:about="https://shamur.ai/bin/flickrsavr/ns#isfriend">
+    <rdfs:label xml:lang="en-US">Flickr isfriend flag</rdfs:label>
+    <rdfs:comment xml:lang="en-US">Boolean if the Flickr photo is friend visible</rdfs:comment>
+    <rdfs:isDefinedBy rdf:resource="https://shamur.ai/bin/flickrsavr/ns"/>
+    <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
+  </rdf:Property>
+
+  <rdf:Property rdf:about="https://shamur.ai/bin/flickrsavr/ns#isfamily">
+    <rdfs:label xml:lang="en-US">Flickr isfamily flag</rdfs:label>
+    <rdfs:comment xml:lang="en-US">Boolean if the Flickr photo is family visible</rdfs:comment>
+    <rdfs:isDefinedBy rdf:resource="https://shamur.ai/bin/flickrsavr/ns"/>
+    <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
+  </rdf:Property>
+
+  <rdf:Property rdf:about="https://shamur.ai/bin/flickrsavr/ns#description">
+    <rdfs:label xml:lang="en-US">Flickr description</rdfs:label>
+    <rdfs:comment xml:lang="en-US">Flickr description of the photo</rdfs:comment>
+    <rdfs:isDefinedBy rdf:resource="https://shamur.ai/bin/flickrsavr/ns"/>
+    <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
+  </rdf:Property>
+  
+  <rdf:Property rdf:about="https://shamur.ai/bin/flickrsavr/ns#dateupload">
+    <rdfs:label xml:lang="en-US">Flickr dateupload</rdfs:label>
+    <rdfs:comment xml:lang="en-US">Flickr dateupload of the photo</rdfs:comment>
+    <rdfs:isDefinedBy rdf:resource="https://shamur.ai/bin/flickrsavr/ns"/>
+    <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
+  </rdf:Property>
+
+  <rdf:Property rdf:about="https://shamur.ai/bin/flickrsavr/ns#datetaken">
+    <rdfs:label xml:lang="en-US">Flickr datetaken</rdfs:label>
+    <rdfs:comment xml:lang="en-US">Flickr datetaken of the photo</rdfs:comment>
+    <rdfs:isDefinedBy rdf:resource="https://shamur.ai/bin/flickrsavr/ns"/>
+    <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
+  </rdf:Property>
+
+  <rdf:Property rdf:about="https://shamur.ai/bin/flickrsavr/ns#dateuploadgranularity">
+    <rdfs:label xml:lang="en-US">Flickr dateuploadgranularity</rdfs:label>
+    <rdfs:comment xml:lang="en-US">Flickr dateuploadgranularity of the photo</rdfs:comment>
+    <rdfs:isDefinedBy rdf:resource="https://shamur.ai/bin/flickrsavr/ns"/>
+    <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
+  </rdf:Property>
+
+  <rdf:Property rdf:about="https://shamur.ai/bin/flickrsavr/ns#datetakenunknown">
+    <rdfs:label xml:lang="en-US">Flickr datetakenunknown</rdfs:label>
+    <rdfs:comment xml:lang="en-US">Flickr datetakenunknown of the photo</rdfs:comment>
+    <rdfs:isDefinedBy rdf:resource="https://shamur.ai/bin/flickrsavr/ns"/>
+    <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
+  </rdf:Property>
+  
+  <rdf:Property rdf:about="https://shamur.ai/bin/flickrsavr/ns#views">
+    <rdfs:label xml:lang="en-US">Flickr view count</rdfs:label>
+    <rdfs:comment xml:lang="en-US">Flickr views count of the photo</rdfs:comment>
+    <rdfs:isDefinedBy rdf:resource="https://shamur.ai/bin/flickrsavr/ns"/>
+    <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
+  </rdf:Property>
+
+  <rdf:Property rdf:about="https://shamur.ai/bin/flickrsavr/ns#tags">
+    <rdfs:label xml:lang="en-US">Flickr tags</rdfs:label>
+    <rdfs:comment xml:lang="en-US">Flickr tags of the photo</rdfs:comment>
+    <rdfs:isDefinedBy rdf:resource="https://shamur.ai/bin/flickrsavr/ns"/>
+    <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
+  </rdf:Property>
+
+  <rdf:Property rdf:about="https://shamur.ai/bin/flickrsavr/ns#machinetags">
+    <rdfs:label xml:lang="en-US">Flickr machinetags</rdfs:label>
+    <rdfs:comment xml:lang="en-US">Flickr machinetags of the photo</rdfs:comment>
+    <rdfs:isDefinedBy rdf:resource="https://shamur.ai/bin/flickrsavr/ns"/>
+    <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
+  </rdf:Property>
+  
+  <rdf:Property rdf:about="https://shamur.ai/bin/flickrsavr/ns#url_o">
+    <rdfs:label xml:lang="en-US">Flickr original url</rdfs:label>
+    <rdfs:comment xml:lang="en-US">Flickr original url of the photo</rdfs:comment>
+    <rdfs:isDefinedBy rdf:resource="https://shamur.ai/bin/flickrsavr/ns"/>
+    <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
+  </rdf:Property>
+
+  <rdf:Property rdf:about="https://shamur.ai/bin/flickrsavr/ns#height_o">
+    <rdfs:label xml:lang="en-US">Flickr height</rdfs:label>
+    <rdfs:comment xml:lang="en-US">Flickr height of the original photo</rdfs:comment>
+    <rdfs:isDefinedBy rdf:resource="https://shamur.ai/bin/flickrsavr/ns"/>
+    <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
+  </rdf:Property>
+
+  <rdf:Property rdf:about="https://shamur.ai/bin/flickrsavr/ns#width_o">
+    <rdfs:label xml:lang="en-US">Flickr width</rdfs:label>
+    <rdfs:comment xml:lang="en-US">Flickr width of the original photo</rdfs:comment>
+    <rdfs:isDefinedBy rdf:resource="https://shamur.ai/bin/flickrsavr/ns"/>
+    <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
+  </rdf:Property>
+
+  <rdf:Property rdf:about="https://shamur.ai/bin/flickrsavr/ns#latitude">
+    <rdfs:label xml:lang="en-US">Flickr latitude</rdfs:label>
+    <rdfs:comment xml:lang="en-US">Flickr latitude of the original photo</rdfs:comment>
+    <rdfs:isDefinedBy rdf:resource="https://shamur.ai/bin/flickrsavr/ns"/>
+    <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
+  </rdf:Property>
+
+  <rdf:Property rdf:about="https://shamur.ai/bin/flickrsavr/ns#longitude">
+    <rdfs:label xml:lang="en-US">Flickr longitude</rdfs:label>
+    <rdfs:comment xml:lang="en-US">Flickr longitude of the original photo</rdfs:comment>
+    <rdfs:isDefinedBy rdf:resource="https://shamur.ai/bin/flickrsavr/ns"/>
+    <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
+  </rdf:Property>
+
+  <rdf:Property rdf:about="https://shamur.ai/bin/flickrsavr/ns#accuracy">
+    <rdfs:label xml:lang="en-US">Flickr GPS accuracy</rdfs:label>
+    <rdfs:comment xml:lang="en-US">Flickr GPS accuracy of the original photo</rdfs:comment>
+    <rdfs:isDefinedBy rdf:resource="https://shamur.ai/bin/flickrsavr/ns"/>
+    <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
+  </rdf:Property>
+  
+  <rdf:Property rdf:about="https://shamur.ai/bin/flickrsavr/ns#favorites">
+    <rdfs:label xml:lang="en-US">Flickr favorites</rdfs:label>
+    <rdfs:comment xml:lang="en-US">Flickr favorites array of the photo</rdfs:comment>
+    <rdfs:isDefinedBy rdf:resource="https://shamur.ai/bin/flickrsavr/ns"/>
+    <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
+  </rdf:Property>
+
+  <rdf:Property rdf:about="https://shamur.ai/bin/flickrsavr/ns#comments">
+    <rdfs:label xml:lang="en-US">Flickr comments</rdfs:label>
+    <rdfs:comment xml:lang="en-US">Flickr comments array of the photo</rdfs:comment>
+    <rdfs:isDefinedBy rdf:resource="https://shamur.ai/bin/flickrsavr/ns"/>
+    <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
+  </rdf:Property>
+  
+  <rdf:Property rdf:about="https://shamur.ai/bin/flickrsavr/ns#sets">
+    <rdfs:label xml:lang="en-US">Flickr sets</rdfs:label>
+    <rdfs:comment xml:lang="en-US">Flickr sets array of the photo</rdfs:comment>
+    <rdfs:isDefinedBy rdf:resource="https://shamur.ai/bin/flickrsavr/ns"/>
+    <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
+  </rdf:Property>
+
+</rdf:RDF>
