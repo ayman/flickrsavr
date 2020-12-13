@@ -52,7 +52,7 @@ I think you need all this stuff with [*homebrew*](https://brew.sh):
 brew install boost-python3 gexiv2 pygobject3
 ```
 
-And if you are using a VENV you might need to point the PYTHONPATH:
+And if you are using a VENV and notice it cant find the `gi` package, you might need to point the PYTHONPATH:
 
 ```
 export PYTHONPATH=/usr/local/lib/python3.9/site-packages
