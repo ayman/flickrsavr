@@ -157,14 +157,14 @@ class FlickrSavr(object):
         # get more metadata
         favorites = []
         favs = self.flickr.photos_getFavorites(photo_id=photo['id'])
-        time.sleep(0.15)
+        time.sleep(0.25)
         for person in favs['photo']['person']:
             favorites.append(person['username'])
             favorites.append(person['nsid'])
             favorites.append(person['favedate'])
         comments = []
         comms = self.flickr.photos_comments_getList(photo_id=photo['id'])
-        time.sleep(0.15)
+        time.sleep(0.25)
         try:
             for comment in comms['comments']['comment']:
                 comments.append(comment['author'])
