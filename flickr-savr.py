@@ -152,8 +152,9 @@ class FlickrSavr(object):
         try:
             resp = urllib.request.urlopen(url)
         except:
-            print("Sleeping for 2 seconds...")
+            print("Sleeping for 2 seconds...")            
             time.sleep(2)
+            print("Trying %s" % url)
             resp = urllib.request.urlopen(url)
         image_data = resp.read()
 
