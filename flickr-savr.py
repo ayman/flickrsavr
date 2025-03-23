@@ -1,4 +1,3 @@
-from gi.repository import GExiv2
 import argparse
 import flickrapi
 import gi
@@ -10,6 +9,7 @@ import urllib.parse
 import urllib.request
 import webbrowser
 gi.require_version('GExiv2', '0.10')
+from gi.repository import GExiv2
 
 
 class FlickrSavr(object):
@@ -195,8 +195,8 @@ class FlickrSavr(object):
             pass
         metadata = GExiv2.Metadata()
         metadata.open_path(fname_temp)
-        metadata.register_xmp_namespace("https://shamur.ai/bin/flickrsavr/ns",
-                                        "flickrsavr")
+        metadata.try_register_xmp_namespace("https://shamur.ai/bin/flickrsavr/ns",
+                                            "flickrsavr")
         metadata.set_tag_long("Xmp.flickrsavr.id", int(photo['id']))
         metadata.set_tag_string("Xmp.flickrsavr.owner", self.nsid)
         metadata.set_tag_string("Xmp.flickrsavr.title", photo['title'])
