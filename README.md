@@ -49,7 +49,7 @@ python flickr-savr.py -b PHOTODIR YOURAPIKEY YOURAPISECRET YOURNSID
 I think you need all this stuff with [*homebrew*](https://brew.sh):
 
 ```
-brew install boost-python3 gexiv2 pygobject3
+brew install boost-python3 gexiv2 pygobject3 py3cairo
 ```
 
 And if you are using a VENV and notice it cant find the `gi` package, you might need to point the PYTHONPATH:
